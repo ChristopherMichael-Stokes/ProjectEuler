@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define GRID_SIZE 9
+void solveSudoku(int** grid){
+
+	
+}
+
+int** readGrid(FILE *sudokuGrids){
+	int **grid, i=0, j=0, swap;
+	
+	grid = (int**) calloc(GRID_SIZE, sizeof(int*));
+	for (; i < GRID_SIZE; i++)
+        	grid[i] = (int*) calloc(GRID_SIZE, sizeof(int));
+		
+	i = 0;
+
+	char temp = '0';
+	
+	do {
+		if (i > GRID_SIZE - 1){
+			if (j > GRID_SIZE - 1) break;
+			else {
+				i = 0;
+		       		j++;
+			}		
+		}
+		
+		fscanf(sudokuGrids, "%c", &temp);
+		swap = temp - '0';
+
+		if (swap >= 0 && swap <= GRID_SIZE) {
+			grid[j][i] = swap;
+			/* printf("%d ", grid[i][j]); */
+
+			if (i > GRID_SIZE - 1){
+				if (j > GRID_SIZE - 1) break;
+				else {
+					i = 0;
+		       			j++;
+				}		
+			} else i++;
+		}	
+
+		
+	} while (!feof(sudokuGrids));
+
+	printf("\n");
+	return grid;
+}
+
+void freeGrid(int** grid){
+	int i;
+	for (i=0; i<GRID_SIZE; i++) {
+		free(grid[i]);
+	}
+
+	free(grid);
+}
+
+
+int main(void){
+	int** grid, i, j;
+
+	FILE *sudokuGrids;
+	if ((sudokuGrids = fopen("problem96_input.txt", "r")) == NULL) {
+		perror("problem96_input.txt");
+		exit(EXIT_FAILURE);
+	}	
+	
+	grid = readGrid(sudokuGrids);
+	for (i=0; i<GRID_SIZE; i++){
+	      	for (j=0; j<GRID_SIZE; j++){
+	       		printf("%d ", grid[i][j]);
+		}
+		printf("\n");
+	}		
+
+	solveSudoku(grid);
+
+	freeGrid(grid);	
+		
+	fclose(sudokuGrids);
+
+	return 0;
+}
